@@ -44,7 +44,7 @@ fn put_rand(color:Rgb<f64>,stdout:Stdout,mx:u16,my:u16) -> Stdout{
         .take(1)
         .map(char::from).collect();
     } else {
-        char = "█".to_string();
+        char = String::from("█")
     }
     let stdo = go_rand_pos(stdout,mx,my);
     let painted = paint(char.as_str(),color);
