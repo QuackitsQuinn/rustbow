@@ -8,7 +8,7 @@ use prisma::{Rgb, Hsv, FromColor};
 use angular_units::Deg;
 use std::{time::Duration,io::{stdout, Stdout}};
 // Change rate is how fast the color changes
-const CHANGE_RATE:f64 = 0.3;
+const CHANGE_RATE:f64 = 0.1;
 const BLOCK:bool = true;
 fn main() -> crossterm::Result<()>{
     let mut stdout = stdout();
