@@ -1,5 +1,6 @@
 extern crate crossterm;
 extern crate prisma;
+mod util;
 
 use angular_units::Deg;
 use ansi_term::Color::RGB;
@@ -18,6 +19,7 @@ use std::{
 // Change rate is how fast the color changes
 // TODO: make it changeable by user
 // TODO: make it a function of the size of the terminal
+// TODO: make it so you dont have to ctrl+c to exit
 // maybe 180/maxx*maxy?
 const CHANGE_RATE: f64 = 0.1;
 const BLOCK: bool = true;
@@ -34,7 +36,7 @@ fn main() -> crossterm::Result<()> {
     let mx = sizeur.1;
     let my = sizeur.0;
     while pgrmstate {
-        color = nextcol(color);
+        color = util::nextcol(color, CHANGE_RATE);
         stdout = put_rand(color, stdout, mx, my);
         (pgrmstate, stdout) = end(stdout);
     }
@@ -51,17 +53,12 @@ fn go_rand_pos(mut stdout: Stdout, mx: u16, my: u16) -> Stdout {
 fn put_rand(color: Rgb<f64>, stdout: Stdout, mx: u16, my: u16) -> Stdout {
     let char: String;
     if !BLOCK {
-        let rng = rand::thread_rng();
-        char = rng
-            .sample_iter(&Alphanumeric)
-            .take(1)
-            .map(char::from)
-            .collect();
+        char = util::get_rand_char()
     } else {
         char = String::from("█")
     }
     let stdo = go_rand_pos(stdout, mx, my);
-    let painted = paint(char.as_str(), color);
+    let painted = util::paint(char.as_str(), color);
     print!("{}", painted);
     stdo
 }
@@ -71,23 +68,4 @@ fn end(stdout: Stdout) -> (bool, Stdout) {
     } else {
         (true, stdout)
     }
-}
-fn nextcol(color: Rgb<f64>) -> Rgb<f64> {
-    let mut hsv = Hsv::from_color(&color);
-    let mut thishue: Deg<f64> = hsv.hue();
-    if thishue <= Deg(359 as f64) {
-        thishue = thishue + Deg(CHANGE_RATE);
-    } else {
-        thishue = Deg(0 as f64);
-    }
-    hsv.set_hue(thishue);
-    Rgb::from_color(&hsv)
-}
-
-fn paint(input: &str, color: Rgb<f64>) -> String {
-    let r: u8 = (color.red() * 255 as f64).floor() as u8;
-    let g: u8 = (color.green() * 255 as f64).floor() as u8;
-    let b: u8 = (color.blue() * 255 as f64).floor() as u8;
-    let painted = RGB(r, g, b).paint(input).to_string();
-    painted
 }
