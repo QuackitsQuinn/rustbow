@@ -14,7 +14,7 @@ use prisma::{FromColor, Hsv, Rgb};
 use rand::{distributions::Alphanumeric, Rng};
 use std::{
     io::{stdout, Stdout},
-    time::Duration,
+    time::Duration, sync::mpsc::{self, Sender}, thread,
 };
 // Change rate is how fast the color changes
 // TODO: make it changeable by user
@@ -36,9 +36,16 @@ fn main() -> crossterm::Result<()> {
     let sizeur = size.unwrap();
     let mx = sizeur.1;
     let my = sizeur.0;
+    let (tx, rx) = mpsc::channel();
+    let thread = thread::spawn(move || {
+        util::wait_for_keypress(tx);
+    });
     loop {
         color = util::nextcol(color, CHANGE_RATE);
         stdout = put_rand(color, stdout, mx, my);
+        if thread.is_finished() {
+            break; // pure debug
+        }
     }
     Ok(())
 }
