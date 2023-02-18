@@ -21,7 +21,7 @@ use std::{
 // TODO: make it a function of the size of the terminal
 // TODO: make it so you dont have to ctrl+c to exit
 // maybe 180/maxx*maxy?
-const CHANGE_RATE: f64 = 0.1;
+const CHANGE_RATE: f64 = 0.001;
 const BLOCK: bool = true;
 fn main() -> crossterm::Result<()> {
     let mut stdout = stdout();
@@ -29,16 +29,14 @@ fn main() -> crossterm::Result<()> {
     if res.is_err() {
         println!("Error: {}", res.err().unwrap());
     }
-    let mut pgrmstate: bool = true;
     let mut color = Rgb::from_color(&Hsv::new(Deg(0 as f64), 1 as f64, 1 as f64));
     let size = size();
     let sizeur = size.unwrap();
     let mx = sizeur.1;
     let my = sizeur.0;
-    while pgrmstate {
+    loop {
         color = util::nextcol(color, CHANGE_RATE);
         stdout = put_rand(color, stdout, mx, my);
-        (pgrmstate, stdout) = end(stdout);
     }
     Ok(())
 }
@@ -62,10 +60,4 @@ fn put_rand(color: Rgb<f64>, stdout: Stdout, mx: u16, my: u16) -> Stdout {
     print!("{}", painted);
     stdo
 }
-fn end(stdout: Stdout) -> (bool, Stdout) {
-    if poll(Duration::from_millis(0)).unwrap() {
-        (false, stdout)
-    } else {
-        (true, stdout)
-    }
-}
+
