@@ -3,18 +3,15 @@ extern crate prisma;
 mod util;
 
 use angular_units::Deg;
-use ansi_term::Color::RGB;
 use crossterm::{
     cursor::{Hide, MoveTo},
-    event::poll,
     execute,
     terminal::size,
 };
 use prisma::{FromColor, Hsv, Rgb};
-use rand::{distributions::Alphanumeric, Rng};
+use rand::Rng;
 use std::{
-    io::{stdout, Stdout},
-    time::Duration, sync::mpsc::{self, Sender}, thread,
+    io::{stdout, Stdout}, thread,
 };
 
 // TODO: Make all of these configurable with args + default config file
@@ -43,9 +40,8 @@ fn main() -> crossterm::Result<()> {
     let sizeur = size.unwrap();
     let mx = sizeur.1;
     let my = sizeur.0;
-    let (tx, rx) = mpsc::channel();
     let thread = thread::spawn(move || {
-        util::wait_for_keypress(tx);
+        util::wait_for_keypress();
     });
     loop {
         color = util::nextcol(color, CHANGE_RATE);
@@ -68,7 +64,8 @@ fn go_rand_pos(mut stdout: Stdout, mx: u16, my: u16) -> Stdout {
     let x = rng.gen_range(0..mx);
     let y = rng.gen_range(0..my);
     // Not using result because speed is extremely important
-    execute!(stdout, MoveTo(y as u16, x as u16));
+
+    let _ = execute!(stdout, MoveTo(y as u16, x as u16));
     stdout
 }
 /// Prints a random character to the screen

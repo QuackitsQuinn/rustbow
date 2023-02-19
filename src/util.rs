@@ -1,10 +1,9 @@
 
-use std::{io::stdout, time::Duration, sync::mpsc};
 
 use ansi_term::Color::RGB;
-use crossterm::{execute, event::{poll, read}, cursor::Hide};
+use crossterm::{event::read};
 use prisma::Rgb;
-use rand::{distributions::Alphanumeric, Rng,thread_rng, rngs::ThreadRng};
+use rand::{distributions::Alphanumeric, Rng};
 use angular_units::Deg;
 use prisma::{FromColor, Hsv};
 
@@ -51,13 +50,7 @@ pub fn nextcol(color: Rgb<f64>, change_rate: f64) -> Rgb<f64> {
     hsv.set_hue(thishue);
     Rgb::from_color(&hsv)
 }
-/// waits for a keypress in a separate thread
-/// # Arguments
-/// * `tx` - The sender to send the keypress to. sends a true bool
-pub fn wait_for_keypress(tx: mpsc::Sender<bool>) {
-    let mut stdout = stdout();
-    
-        if read().is_ok() { // wait until a key is pressed. dont care about info.
-            tx.send(true).unwrap();
-        }
+/// Waits for a keypress in a separate thread. Thread is killed when a key is pressed.
+pub fn wait_for_keypress() {
+        let _dummy = read();
 }
