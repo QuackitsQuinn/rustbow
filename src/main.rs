@@ -18,7 +18,7 @@ use std::{
 
 
 // Hue change rate. changes per character
-const CHANGE_RATE: f64 = 0.001 as f64;
+const CHANGE_RATE: f64 = 0.001;
 // Saturation of the color
 const SATURATION: f64 = 1 as f64;
 // Value of the color
