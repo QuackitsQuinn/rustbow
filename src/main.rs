@@ -1,6 +1,8 @@
 extern crate crossterm;
 extern crate prisma;
 mod util;
+mod conf;
+mod test;
 
 use angular_units::Deg;
 use crossterm::{

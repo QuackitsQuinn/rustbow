@@ -1,4 +1,5 @@
-use serde::{Deserialize, Serialize};
+
+use serde_derive::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
