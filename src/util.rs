@@ -1,7 +1,9 @@
 
 
+use std::io::Stdout;
+
 use ansi_term::Color::RGB;
-use crossterm::{event::read};
+use crossterm::{event::read, execute, cursor::MoveTo};
 use prisma::Rgb;
 use rand::{distributions::Alphanumeric, Rng};
 use angular_units::Deg;
@@ -52,5 +54,41 @@ pub fn nextcol(color: Rgb<f64>, change_rate: f64) -> Rgb<f64> {
 }
 /// Waits for a keypress in a separate thread. Thread is killed when a key is pressed.
 pub fn wait_for_keypress() {
-        let _dummy = read();
+        let _ = read();
+}
+
+/// Moves the cursor to a random position on the screen
+/// # Arguments
+/// * `stdout` - The stdout to write to 
+/// * `mx` - The maximum x position
+/// * `my` - The maximum y position
+/// # Returns
+/// The stdout to write to. This is likely to be removed in the future.
+pub fn go_rand_pos(mut stdout: Stdout, mx: u16, my: u16) -> Stdout {
+    let mut rng = rand::thread_rng();
+    let x = rng.gen_range(0..mx);
+    let y = rng.gen_range(0..my);
+
+    let _ = execute!(stdout, MoveTo(y as u16, x as u16));
+    stdout
+}
+/// Prints a random character to the screen
+/// # Arguments
+/// * `color` - The color to paint the character
+/// * `stdout` - The stdout to write to
+/// * `mx` - The maximum x position
+/// * `my` - The maximum y position
+/// # Returns
+///  The stdout to write to. This is likely to be removed in the future.
+pub fn put_rand(color: Rgb<f64>, stdout: Stdout, mx: u16, my: u16, block_mode:bool) -> Stdout {
+    let char: String;
+    if !block_mode {
+        char = get_rand_char()
+    } else {
+        char = String::from("█")
+    }
+    let stdo = go_rand_pos(stdout, mx, my);
+    let painted = paint(char.as_str(), color);
+    print!("{}", painted);
+    stdo
 }

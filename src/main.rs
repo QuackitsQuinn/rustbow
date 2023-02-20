@@ -18,7 +18,7 @@ use std::{
 
 
 // Hue change rate. changes per character
-const CHANGE_RATE: f64 = 0.001;
+const CHANGE_RATE: f64 = 0.001 as f64;
 // Saturation of the color
 const SATURATION: f64 = 1 as f64;
 // Value of the color
@@ -45,47 +45,10 @@ fn main() -> crossterm::Result<()> {
     });
     loop {
         color = util::nextcol(color, CHANGE_RATE);
-        stdout = put_rand(color, stdout, mx, my);
+        stdout = util::put_rand(color, stdout, mx, my,BLOCK);
         if thread.is_finished() {
-            break; // pure debug
+            break; // Exit when a key is pressed                                          vdfghp'n;/l. O
         }
     }
     Ok(())
 }
-/// Moves the cursor to a random position on the screen
-/// # Arguments
-/// * `stdout` - The stdout to write to
-/// * `mx` - The maximum x position
-/// * `my` - The maximum y position
-/// # Returns
-/// The stdout to write to. This is likely to be removed in the future.
-fn go_rand_pos(mut stdout: Stdout, mx: u16, my: u16) -> Stdout {
-    let mut rng = rand::thread_rng();
-    let x = rng.gen_range(0..mx);
-    let y = rng.gen_range(0..my);
-    // Not using result because speed is extremely important
-
-    let _ = execute!(stdout, MoveTo(y as u16, x as u16));
-    stdout
-}
-/// Prints a random character to the screen
-/// # Arguments
-/// * `color` - The color to paint the character
-/// * `stdout` - The stdout to write to
-/// * `mx` - The maximum x position
-/// * `my` - The maximum y position
-/// # Returns
-///  The stdout to write to. This is likely to be removed in the future.
-fn put_rand(color: Rgb<f64>, stdout: Stdout, mx: u16, my: u16) -> Stdout {
-    let char: String;
-    if !BLOCK {
-        char = util::get_rand_char()
-    } else {
-        char = String::from("█")
-    }
-    let stdo = go_rand_pos(stdout, mx, my);
-    let painted = util::paint(char.as_str(), color);
-    print!("{}", painted);
-    stdo
-}
-
