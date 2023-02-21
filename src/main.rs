@@ -19,18 +19,11 @@ use std::{
 
 // TODO: Make all of these configurable with args + default config file
 
-
-const DEFAULT_CONFIG: Config = Config {
-    block_mode: true,
-    change_rate: 0.001,
-    saturation: 1.0,
-    value: 1.0,
-};
-
 /// Main function 
 /// For now, it contains the main loop. It will be moved to a separate file later with better customizability.
 fn main() -> crossterm::Result<()> {
-    rainbow(DEFAULT_CONFIG)
+    let config = conf::get_config();
+    rainbow(config)
 }
 
 fn rainbow(config:Config) -> crossterm::Result<()> {
