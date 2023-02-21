@@ -17,10 +17,8 @@ use std::{
     io::stdout, thread,
 };
 
-// TODO: Make all of these configurable with args + default config file
+// TODO: Make all of these configurable with args
 
-/// Main function 
-/// For now, it contains the main loop. It will be moved to a separate file later with better customizability.
 fn main() -> crossterm::Result<()> {
     let config = conf::get_config();
     rainbow(config)

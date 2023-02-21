@@ -4,7 +4,6 @@ mod tests {
     use approx::assert_relative_eq;
     use prisma::{Hsv, Rgb, FromColor};
     use crate::util::nextcol;
-    use super::*;
 
     #[test]
     fn test_serede_serial() {
