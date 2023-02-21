@@ -62,8 +62,6 @@ pub fn wait_for_keypress() {
 /// * `stdout` - The stdout to write to 
 /// * `mx` - The maximum x position
 /// * `my` - The maximum y position
-/// # Returns
-/// The stdout to write to. This is likely to be removed in the future.
 pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
     let mut rng = rand::thread_rng();
     let x = rng.gen_range(0..mx);
@@ -77,8 +75,6 @@ pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
 /// * `stdout` - The stdout to write to
 /// * `mx` - The maximum x position
 /// * `my` - The maximum y position
-/// # Returns
-///  The stdout to write to. This is likely to be removed in the future.
 pub fn put_rand(color: Rgb<f64>, stdout: &Stdout, mx: u16, my: u16, block_mode:bool) {
     let char: String;
     if !block_mode {
