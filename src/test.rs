@@ -1,6 +1,7 @@
 #[cfg(test)]
 mod tests {
     use angular_units::Deg;
+    use approx::assert_relative_eq;
     use prisma::{Hsv, Rgb, FromColor};
     use crate::util::nextcol;
     use super::*;
@@ -35,6 +36,6 @@ mod tests {
         let new_color = nextcol(color, 1.0);
         let hue_scalar: Deg<f64> = Hsv::from_color(&new_color).hue();
         let actual_hue = hue_scalar.0.ceil();
-        assert_eq!(actual_hue, new_hue);
+        assert_relative_eq!(actual_hue, new_hue);
     }
 }
