@@ -6,14 +6,13 @@ mod test;
 
 use angular_units::Deg;
 use crossterm::{
-    cursor::{Hide, MoveTo},
+    cursor::Hide,
     execute,
     terminal::size,
 };
 use prisma::{FromColor, Hsv, Rgb};
-use rand::Rng;
 use std::{
-    io::{stdout, Stdout}, thread,
+    io::stdout, thread,
 };
 
 // TODO: Make all of these configurable with args + default config file
