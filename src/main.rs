@@ -43,7 +43,7 @@ fn rainbow(config:Config) -> crossterm::Result<()> {
     });
     loop {
         color = util::nextcol(color, config.change_rate);
-        stdout = util::put_rand(color, stdout, mx, my,config.block_mode);
+        util::put_rand(color, &stdout, mx, my,config.block_mode);
         if thread.is_finished() {
             break; // Exit when a key is pressed
         }
