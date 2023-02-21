@@ -8,9 +8,9 @@ mod test;
 use angular_units::Deg;
 use conf::Config;
 use crossterm::{
-    cursor::Hide,
+    cursor::{Hide, Show},
     execute,
-    terminal::size,
+    terminal::{size, Clear, ClearType},
 };
 use prisma::{FromColor, Hsv, Rgb};
 use std::{
@@ -55,5 +55,7 @@ fn rainbow(config:Config) -> crossterm::Result<()> {
             break; // Exit when a key is pressed
         }
     }
+    let _ = execute!(stdout, Show);
+    let _ = execute!(stdout, Clear(ClearType::All));
     Ok(())
 }
