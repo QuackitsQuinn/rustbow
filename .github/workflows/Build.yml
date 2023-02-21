@@ -13,5 +13,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Run Tests
+      run: cargo test -- --nocapture
     - name: Build
       run: cargo build --verbose

@@ -49,7 +49,7 @@ fn main() -> crossterm::Result<()> {
         color = util::nextcol(color, CHANGE_RATE);
         stdout = util::put_rand(color, stdout, mx, my,BLOCK);
         if thread.is_finished() {
-            break; // Exit when a key is pressed                                          vdfghp'n;/l. O
+            break; // Exit when a key is pressed
         }
     }
     Ok(())
