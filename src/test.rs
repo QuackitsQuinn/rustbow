@@ -25,6 +25,7 @@ mod tests {
         change_rate = 0.001
         saturation = 1.0
         value = 1.0
+        random = true
         "#;
         let deserialized: crate::conf::Config = toml::from_str(serialized).unwrap();
         println!("{:?}", deserialized);
