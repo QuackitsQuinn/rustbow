@@ -5,7 +5,7 @@ use std::io::Stdout;
 use ansi_term::Color::RGB;
 use crossterm::{event::read, execute, cursor::MoveTo};
 use prisma::Rgb;
-use rand::{distributions::Alphanumeric, Rng};
+use rand::{distributions::Alphanumeric, Rng, seq::SliceRandom};
 use angular_units::Deg;
 use prisma::{FromColor, Hsv};
 
@@ -66,7 +66,6 @@ pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
     let mut rng = rand::thread_rng();
     let x = rng.gen_range(0..mx);
     let y = rng.gen_range(0..my);
-
     let _ = execute!(stdout, MoveTo(y as u16, x as u16));
 }
 /// Prints a random character to the screen
@@ -75,12 +74,13 @@ pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
 /// * `stdout` - The stdout to write to
 /// * `mx` - The maximum x position
 /// * `my` - The maximum y position
-pub fn put_rand(color: Rgb<f64>, stdout: &Stdout, mx: u16, my: u16, block_mode:bool) {
+pub fn put_rand(color: Rgb<f64>, stdout: &Stdout, mx: u16, my: u16, random:bool, chars: &Vec<char>) {
     let char: String;
-    if !block_mode {
+    let mut rng = rand::thread_rng();
+    if random {
         char = get_rand_char()
     } else {
-        char = String::from("█")
+        char = chars.choose(&mut rng).unwrap().to_string();
     }
     go_rand_pos(&stdout, mx, my);
     let painted = paint(char.as_str(), color);
