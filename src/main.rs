@@ -1,9 +1,9 @@
 extern crate crossterm;
 extern crate prisma;
 
-mod util;
 mod conf;
 mod test;
+mod util;
 
 use angular_units::Deg;
 use conf::Config;
@@ -13,9 +13,7 @@ use crossterm::{
     terminal::{size, Clear, ClearType},
 };
 use prisma::{FromColor, Hsv, Rgb};
-use std::{
-    io::stdout, thread, process::Command,
-};
+use std::{io::stdout, thread};
 
 // TODO: Make all of these configurable with args
 
@@ -31,7 +29,7 @@ fn main() -> crossterm::Result<()> {
     res
 }
 
-fn rainbow(config:Config) -> crossterm::Result<()> {
+fn rainbow(config: Config) -> crossterm::Result<()> {
     let mut stdout = stdout();
     let res = execute!(stdout, Hide);
     if res.is_err() {
@@ -46,10 +44,14 @@ fn rainbow(config:Config) -> crossterm::Result<()> {
     let thread = thread::spawn(move || {
         util::wait_for_keypress();
     });
-    let chars = config.chars.unwrap_or_else(|| "█".to_owned()).chars().collect::<Vec<char>>();
+    let chars = config
+        .chars
+        .unwrap_or_else(|| "█".to_owned())
+        .chars()
+        .collect::<Vec<char>>();
     loop {
         color = util::nextcol(color, config.change_rate);
-        util::put_rand(color, &stdout, mx, my,config.random,&chars);
+        util::put_rand(color, &stdout, mx, my, config.random, &chars);
         if thread.is_finished() {
             break;
         }

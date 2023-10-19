@@ -1,13 +1,11 @@
-
-
 use std::io::Stdout;
 
-use ansi_term::Color::RGB;
-use crossterm::{event::read, execute, cursor::MoveTo};
-use prisma::Rgb;
-use rand::{distributions::Alphanumeric, Rng, seq::SliceRandom};
 use angular_units::Deg;
+use ansi_term::Color::RGB;
+use crossterm::{cursor::MoveTo, event::read, execute};
+use prisma::Rgb;
 use prisma::{FromColor, Hsv};
+use rand::{distributions::Alphanumeric, seq::SliceRandom, Rng};
 
 /// Paints the unput string with the given color
 /// # Arguments
@@ -16,24 +14,23 @@ use prisma::{FromColor, Hsv};
 /// # Returns
 /// The painted string with ANSI escape codes
 pub fn paint(input: &str, color: Rgb<f64>) -> String {
-    let r: u8 = (color.red() * 255 as f64).floor() as u8;
-    let g: u8 = (color.green() * 255 as f64).floor() as u8;
-    let b: u8 = (color.blue() * 255 as f64).floor() as u8;
+    let r: u8 = (color.red() * 255_f64).floor() as u8;
+    let g: u8 = (color.green() * 255_f64).floor() as u8;
+    let b: u8 = (color.blue() * 255_f64).floor() as u8;
     let painted = RGB(r, g, b).paint(input).to_string();
     painted
 }
 /// Gets a random character
 /// # Returns
-/// A random character 
+/// A random character
 // TODO: make it return a char instead of a string
 pub fn get_rand_char() -> String {
     let rng = rand::thread_rng();
-    let character = rng
-        .sample_iter(&Alphanumeric)
+
+    rng.sample_iter(&Alphanumeric)
         .take(1)
         .map(char::from)
-        .collect();
-    character
+        .collect()
 }
 /// Increments the hue of the given color by the given amount
 /// # Arguments
@@ -44,8 +41,8 @@ pub fn get_rand_char() -> String {
 pub fn nextcol(color: Rgb<f64>, change_rate: f64) -> Rgb<f64> {
     let mut hsv = Hsv::from_color(&color);
     let mut thishue: Deg<f64> = hsv.hue();
-    if thishue <= Deg(359 as f64) {
-        thishue = thishue + Deg(change_rate);
+    if thishue <= Deg(359_f64) {
+        thishue += Deg(change_rate);
     } else {
         thishue = Deg(0 as f64);
     }
@@ -54,19 +51,19 @@ pub fn nextcol(color: Rgb<f64>, change_rate: f64) -> Rgb<f64> {
 }
 /// Waits for a keypress in a separate thread. Thread is killed when a key is pressed.
 pub fn wait_for_keypress() {
-        let _ = read();
+    let _ = read();
 }
 
 /// Moves the cursor to a random position on the screen
 /// # Arguments
-/// * `stdout` - The stdout to write to 
+/// * `stdout` - The stdout to write to
 /// * `mx` - The maximum x position
 /// * `my` - The maximum y position
 pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
     let mut rng = rand::thread_rng();
     let x = rng.gen_range(0..mx);
     let y = rng.gen_range(0..my);
-    let _ = execute!(stdout, MoveTo(y as u16, x as u16));
+    let _ = execute!(stdout, MoveTo(y, x));
 }
 /// Prints a random character to the screen
 /// # Arguments
@@ -74,15 +71,21 @@ pub fn go_rand_pos(mut stdout: &Stdout, mx: u16, my: u16) {
 /// * `stdout` - The stdout to write to
 /// * `mx` - The maximum x position
 /// * `my` - The maximum y position
-pub fn put_rand(color: Rgb<f64>, stdout: &Stdout, mx: u16, my: u16, random:bool, chars: &Vec<char>) {
-    let char: String;
+pub fn put_rand(
+    color: Rgb<f64>,
+    stdout: &Stdout,
+    mx: u16,
+    my: u16,
+    random: bool,
+    chars: &Vec<char>,
+) {
     let mut rng = rand::thread_rng();
-    if random {
-        char = get_rand_char()
+    let char: String = if random {
+        get_rand_char()
     } else {
-        char = chars.choose(&mut rng).unwrap().to_string();
-    }
-    go_rand_pos(&stdout, mx, my);
+        chars.choose(&mut rng).unwrap().to_string()
+    };
+    go_rand_pos(stdout, mx, my);
     let painted = paint(char.as_str(), color);
     print!("{}", painted);
 }

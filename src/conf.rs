@@ -1,4 +1,3 @@
-
 use std::{fs::read_to_string, path::PathBuf};
 
 use directories::BaseDirs;
@@ -19,8 +18,8 @@ const DEFAULT_CONFIG: Config = Config {
     change_rate: 0.001,
     saturation: 1.0,
     value: 1.0,
-    random: true, 
-    chars: None, 
+    random: true,
+    chars: None,
     // we cant use chars as a default because the string needs to be owned and cant be converted to owned in a const
 };
 const CONFIG_NAME: &str = "rustbow.toml";
@@ -35,7 +34,6 @@ pub fn get_config() -> (Config, bool) {
     if !configpath.exists() {
         write_default_config();
         is_default = true;
-
     }
     let configfile = read_to_string(configpath);
     let mut config: Config = DEFAULT_CONFIG;
@@ -48,7 +46,7 @@ pub fn get_config() -> (Config, bool) {
     (config, is_default)
 }
 /// Writes the default config to the config file.
-fn write_default_config(){
+fn write_default_config() {
     let configpath = get_config_path();
     let config = toml::to_string(&DEFAULT_CONFIG).unwrap();
     let conf_with_notes = 
@@ -59,7 +57,6 @@ fn write_default_config(){
     if res.is_err() {
         println!("Error: {}", res.err().unwrap());
     }
-
 }
 /// Loads the config from a string. If the string is invalid, the default config will be returned.
 fn load_from_string(configfile: String) -> Config {
